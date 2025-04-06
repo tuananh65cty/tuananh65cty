@@ -1,0 +1,67 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Nhập dữ liệu từ người dùng
+h = float(input("Nhập độ cao h: "))           # độ cao ban đầu (m)
+v = float(input("Nhập vận tốc ban đầu v: ")) # vận tốc ban đầu (m/s)
+g = 9.8
+x = float(input("Nhập tọa độ x: "))          # x của mục tiêu
+y = float(input("Nhập tọa độ y: "))          # y của mục tiêu
+
+# Các hệ số của phương trình bậc hai theo tan(alpha)
+A = (g * x**2) / (2 * v**2)
+B = -x
+C = A + (y - h)
+# Tính delta
+delta = B**2 - 4*A*C
+if delta < 0:
+    print("Không có góc bắn nào để trúng mục tiêu.")
+elif delta == 0:
+    # Chỉ có một góc duy nhất
+    tan_alpha = -B / (2 * A)
+    alpha = np.degrees(np.arctan(tan_alpha))  # chuyển từ radian sang độ
+    if 0 < alpha < 90:  # Chỉ lấy góc trong khoảng từ 0 đến 90 độ
+        print("Góc bắn trúng mục tiêu là", round(alpha, 2), "độ")
+        # Tính quỹ đạo cho góc duy nhất
+        x_giatri = np.linspace(0, x, 500)
+        y_vals = h + np.tan(np.radians(alpha)) * x_giatri - (g * x_giatri**2) / (2 * v**2 * np.cos(np.radians(alpha))**2)
+
+        # Vẽ đồ thị cho góc bắn
+        plt.figure(figsize=(10, 6))  # kích thước đồ thị figsize(rộng,cao)
+        plt.plot(x_giatri, y_vals, label="Góc bắn " + str(round(alpha, 2)) + "°", color='black', linestyle='--')
+        plt.xlabel('Tọa độ x (m)')
+        plt.ylabel('Tọa độ y (m)')
+        plt.title('Đồ thị chuyển động ném xiên với góc bắn duy nhất')
+        plt.legend()
+        plt.grid(True)
+        plt.show()
+    else:
+        print("Không có góc bắn hợp lệ trong khoảng 0-90°.")
+else:
+    tan_alpha1 = (-B + np.sqrt(delta)) / (2 * A)
+    tan_alpha2 = (-B - np.sqrt(delta)) / (2 * A)
+
+    alpha1 = np.degrees(np.arctan(tan_alpha1))  # chuyển từ radian sang độ
+    alpha2 = np.degrees(np.arctan(tan_alpha2)) 
+
+    # Chỉ lấy góc dương hợp lệ trong khoảng từ 0 đến 90 độ
+    if 0 < alpha1 < 90:
+        print("Góc bắn 1 là", round(alpha1, 2), "độ")
+        # Tính quỹ đạo cho góc bắn 1
+        x_giatri = np.linspace(0, x, 500)
+        y1_vals = h + np.tan(np.radians(alpha1)) * x_giatri - (g * x_giatri**2) / (2 * v**2 * np.cos(np.radians(alpha1))**2)
+        plt.plot(x_giatri, y1_vals, label="Góc bắn 1 " + str(round(alpha1, 2)) + "°", color='red', linestyle='--')
+
+    if 0 < alpha2 < 90:
+        print("Góc bắn 2 là", round(alpha2, 2), "độ")
+        # Tính quỹ đạo cho góc bắn 2
+        y2_vals = h + np.tan(np.radians(alpha2)) * x_giatri - (g * x_giatri**2) / (2 * v**2 * np.cos(np.radians(alpha2))**2)
+        plt.plot(x_giatri, y2_vals, label="Góc bắn 2 " + str(round(alpha2, 2)) + "°", color='blue', linestyle='--')
+
+    # Hiển thị đồ thị
+    plt.xlabel('Tọa độ x (m)')
+    plt.ylabel('Tọa độ y (m)')
+    plt.title('Đồ thị chuyển động ném xiên với các góc bắn')
+    plt.legend()
+    plt.grid(True)
+    plt.show()
