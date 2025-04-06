@@ -1,0 +1,47 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Hằng số
+hbar = 1.054e-34  # Hằng số Planck rút gọn
+m = 9.1095e-31  # Khối lượng electron
+L = 1e-9  # Chiều dài hố thế (1 nm)
+q_element = 1.6e-19  # Điện tích electron để đổi đơn vị năng lượng
+N = 5000  # Số điểm lưới
+
+# Hàm giải phương trình Schrödinger bằng phương pháp Euler
+def solve_schrodinger_euler(n):
+    E_n = (n**2 * np.pi**2 * hbar**2) / (2 * m * L**2)
+    x_vals = np.linspace(0, L, N)
+    dx = x_vals[1] - x_vals[0]
+    
+    # Điều kiện ban đầu
+    psi = np.zeros(N)
+    dpsi = np.ones(N)  # Giá trị khởi tạo giả định
+    
+    # Tích phân phương trình Schrödinger theo phương pháp Euler
+    for i in range(1, N - 1):
+        d2psi = -2 * m / hbar**2 * E_n * psi[i]  # Tính đạo hàm cấp 2
+        dpsi[i + 1] = dpsi[i] + d2psi * dx  # Cập nhật đạo hàm
+        psi[i + 1] = psi[i] + dpsi[i] * dx  # Cập nhật hàm sóng
+    
+    # Nghiệm lý thuyết dạng sin
+    psi_analytic = np.sqrt(2 / L) * np.sin(n * np.pi * x_vals / L)
+    
+    # Chuẩn hóa hàm sóng số
+    psi /= np.sqrt(np.trapz(psi**2, x_vals))
+    
+    # Vẽ đồ thị so sánh
+    plt.figure(figsize=(8, 5))
+    plt.plot(x_vals / L, psi, label=f'Giải số Euler (n={n})', linewidth=2)
+    plt.plot(x_vals / L, psi_analytic, '--', label=f'Nghiệm giải tích (n={n})', linewidth=2)
+    plt.xlabel("x / L")
+    plt.ylabel("Ψ(x)")
+    plt.title("Hàm sóng của hạt trong hố thế vô hạn (Euler Method)")
+    plt.legend()
+    plt.grid(True, linestyle='--', alpha=0.6)
+    plt.show()
+
+# Nhập giá trị n từ người dùng
+n_values = [1, 2, 3, 4]
+for n in n_values:
+    solve_schrodinger_euler(n)
