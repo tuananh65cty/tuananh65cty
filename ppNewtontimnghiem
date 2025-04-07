@@ -1,0 +1,35 @@
+def nghiem_newton(f, df, guess, saiso=1.0e-6):
+    """
+    Hàm sử dụng phương pháp Newton để tìm nghiệm gần `guess`
+    mà tại đó f(x) = 0, với sai số cho phép `saiso`.
+
+    Tham số:
+    f: Hàm số cần tìm nghiệm.
+    df: Đạo hàm của hàm số `f`.
+    guess: Giá trị khởi tạo ban đầu.
+    saiso: Sai số cho phép (mặc định là 1.0e-6).
+
+    Trả về:
+    x: Giá trị nghiệm của hàm số `f(x)`.
+    """
+    x = guess  # Giá trị khởi tạo
+    dx = 2 * saiso  # Khởi tạo giá trị dx lớn hơn sai số
+    
+    while dx > saiso:  # Lặp đến khi dx < sai số
+        x1 = x - f(x) / df(x)  # Cập nhật nghiệm theo Newton
+        dx = abs(x - x1)  # Tính sự thay đổi giữa x và x1
+        x = x1  # Cập nhật giá trị x
+
+    return x  # Trả về nghiệm
+def f(x):
+    return x**2 - 2
+
+def df(x):
+    return 2 * x
+
+# Giá trị khởi tạo ban đầu
+guess = 1.5
+
+# Gọi hàm tìm nghiệm
+root = nghiem_newton(f, df, guess)
+print("Nghiệm tìm được:", root)
