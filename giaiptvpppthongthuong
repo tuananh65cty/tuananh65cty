@@ -1,0 +1,41 @@
+import numpy as np
+
+def FreeFall(state, time):
+    """
+    Hàm định nghĩa phương trình vi phân cho rơi tự do không có lực cản.
+    Tham số:
+       - state: Mảng numpy gồm [x, v], trong đó x là vị trí, v là vận tốc.
+       - time: Thời gian (có thể không dùng nhưng cần thiết cho ODE solver).
+
+    Trả về:
+    - Mảng numpy chứa  [v, g]
+    """
+    g0 = state[1]  # dx/dt = v
+    g1 = 9.8       # dv/dt = g
+
+    return np.array([g0, g1])
+def euler(y, t, dt, derivs):
+    """
+    Hàm triển khai phương pháp Euler để tìm trạng thái mới của y.
+
+    Tham số:
+    - y: Trạng thái hiện tại (numpy array hoặc list).
+    - t: Thời gian hiện tại.
+    - dt: Bước thời gian.
+    - derivs: Hàm trả về đạo hàm của y (định nghĩa phương trình vi phân).
+
+    Trả về:
+    - y_next: Trạng thái tiếp theo sau bước dt.
+    """
+    y_next = y + derivs(y, t) * dt  # Tính toán theo phương pháp Euler
+    return y_next
+def derivs(y, t):
+    return -y
+
+y0 = np.array([1.0])  # y(0) = 1
+t0 = 0.0  # Thời điểm ban đầu
+dt = 0.1  # Bước thời gian
+
+# Áp dụng phương pháp Euler
+y_next = euler(y0, t0, dt, derivs)
+print("Trạng thái tiếp theo:", y_next)
