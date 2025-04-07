@@ -1,0 +1,58 @@
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint
+
+# Số bước tính toán
+N = 1000
+
+# Các thông số ban đầu
+Lo = 1.0  # Độ dài tự nhiên của lò xo (m)
+L = 1.0   # Độ dài ban đầu (m)
+vo = 0.0  # Vận tốc ban đầu (m/s)
+thetao = 0.3  # Góc ban đầu (radian)
+omegao = 0.0  # Vận tốc góc ban đầu (rad/s)
+
+# Khởi tạo trạng thái ban đầu
+y = np.zeros(4)
+y[0] = L   # Độ giãn ban đầu của lò xo
+y[1] = vo
+y[2] = thetao
+y[3] = omegao
+
+# Các hằng số vật lý
+m = 0.2  # Khối lượng (kg)
+g = 9.8  # Gia tốc trọng trường (m/s^2)
+k = 3.5  # Hằng số lò xo (N/m)
+
+# Hàm mô tả phương trình vi phân của con lắc lò xo
+def spring_pendulum(y, t):
+    L = Lo + y[0]  # Độ dài tức thời của con lắc
+    v = y[1]       # Vận tốc hướng tâm
+    theta = y[2]   # Góc lệch
+    omega = y[3]   # Vận tốc góc
+
+    # Phương trình vi phân
+    g0 = v  # dx/dt = v
+    g1 = L * omega**2 - (k/m) * y[0] + g * np.cos(theta)  # dv/dt
+    g2 = omega  # dθ/dt = omega
+    g3 = (-g * np.sin(theta) - 2 * v * omega) / L  # dω/dt
+
+    return np.array([g0, g1, g2, g3])
+
+# Khoảng thời gian tính toán
+time = np.linspace(0, 25, N)
+
+# Giải phương trình vi phân
+answer = odeint(spring_pendulum, y, time, atol=1e-9, rtol=1e-9)
+
+# Chuyển đổi từ tọa độ cực (L, θ) sang tọa độ Descartes (x, y)
+xdata = (Lo + answer[:, 0]) * np.sin(answer[:, 2])
+ydata = -(Lo + answer[:, 0]) * np.cos(answer[:, 2])  # Hướng xuống
+
+# Vẽ đồ thị
+plt.plot(xdata, ydata, 'r')
+plt.xlabel("Horizontal position")
+plt.ylabel("Vertical position")
+plt.title("Spring Pendulum Motion")
+plt.grid()
+plt.show()
