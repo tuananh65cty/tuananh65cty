@@ -1,0 +1,7 @@
+def giai_thua(n):
+	if n == 0:
+		return 1
+	else:
+		return n * giai_thua(n-1)
+m = int(input("nhập số cần tính giai thừa:"))
+print("giai thừa m","=",giai_thua(m))
