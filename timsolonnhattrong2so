@@ -1,0 +1,10 @@
+def max(a,b):
+	if a>b:
+		print(a,"là số lớn nhất")
+	elif a == b:
+		print(a,"bằng",b)
+	else:
+		print(b,"là số lớn nhất")
+a = int(input("nhập vào số a:"))
+b = int(input("nhập vào số b:"))
+print(max(a,b))
