@@ -1,0 +1,11 @@
+import matplotlib.pyplot as plt
+import numpy as np
+x = np.linspace( 0, 10 ,100) # tạo ra 100 điểm từ 0 đến 10
+y = np.sin(x)  # hàm sina(x)
+plt.plot(x , y, label = "sin(x)", color = "blue", linestyle = "--")
+plt.xlabel("Giá trị x")
+plt.ylabel("Giá trị y")
+plt.title("đồ thị hàm sin(x)")
+plt.legend()
+plt.grid(True)
+plt.show()
