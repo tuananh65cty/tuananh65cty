@@ -1,0 +1,29 @@
+def tptt(fn, a, b, N):
+    """
+    Tính tích phân thông thường bằng phương pháp tổng hình thang.
+
+    Tham số:
+    fn: Hàm cần tính tích phân.
+    a, b: Hai cận tích phân.
+    N: Số khoảng chia.
+
+    Trả về:
+    I: Giá trị tích phân xấp xỉ.
+    """
+    I = 0
+    dx = (b - a) / float(N)  # Độ rộng mỗi khoảng chia
+    
+    for j in range(N):
+        X = a + dx * j  # Giá trị x tại điểm chia
+        I += fn(X) * dx  # Cộng dồn giá trị tích phân
+
+    return I  # Trả về kết quả tích phân
+def f(x):
+    return x**2
+
+a = 0  # Cận dưới
+b = 1  # Cận trên
+N = 100  # Số khoảng chia
+
+result = tptt(f, a, b, N)
+print("Giá trị tích phân:", result)
