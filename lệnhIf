@@ -1,0 +1,9 @@
+number = 24
+guess = int(input('Mời nhập vào số nguyên: '))
+if guess ==  number :
+	print('chính xác')
+elif guess < number :
+	print('không, Số đã nhập bé hơn!')
+else:
+	print('Không, Số đã nhập lớn hơn')
+print('kết thúc!')
