@@ -1,0 +1,42 @@
+import numpy as np
+import math
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+#Khai báo các tham số
+g = 9.81 #[m/s^2]
+rho = 7870 #khối lượng riêng của vật (sắt)
+r = 2.0e-3
+rho0 = 1250 # khối lượng riêng chất lỏng
+mu = 750e-3 # độ nhớt của chất lỏng [Pa.s]
+# Hàm mô hình
+def model(y, t, r):
+    V = (4/3) * np.pi * r**3
+    m = rho * V
+    k1 = 6 * np.pi * mu * r
+    F_Archimedes = rho0 * g * V
+    F = m * g - F_Archimedes - k1 * y[1]
+    dy0_dt = y[1]
+    dy1_dt = F / m
+    return [dy0_dt, dy1_dt]
+
+# Tạo mảng bán kính r từ 1mm đến 5mm (10 giá trị)
+r_array = np.linspace(1e-3, 5e-3, 10)
+
+# Khoảng thời gian mô phỏng
+t = np.linspace(0, 1, 500)  # Tăng thời gian để mở rộng quãng đường
+
+# Vẽ đồ thị với Matplotlib
+plt.figure(figsize=(7, 6))
+
+for r in r_array:
+    solve = odeint(model, [0, 0], t, args=(r,))
+    y0, y1 = solve.T  # Tọa độ và vận tốc
+    plt.plot(y1, -y0, label=f'R = {round(r*1e3,2)} mm')
+
+# Cấu hình đồ thị
+plt.title("Vận tốc theo quãng đường", fontsize=14)
+plt.xlabel("v [m/s]", fontsize=12)
+plt.ylabel("s [m]", fontsize=12)
+plt.legend(fontsize=10, loc="best")
+plt.grid(True, linestyle="--", alpha=0.6)
+plt.show()
