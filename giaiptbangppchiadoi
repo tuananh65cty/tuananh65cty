@@ -1,0 +1,17 @@
+from math import log, exp
+sai_so = 1.0e-6 # sai số trong khoảng 1*10^-6
+def f(x):
+	return exp(x) - log(x) - x**2
+a_str, b_str = input("nhập vào giá trị:").split(',') # hai giá trị cách nhau dấu ,
+b = float(b_str)
+a = float(a_str)
+dx = abs(b-a)
+while dx > sai_so:
+	x = (a+b)/2.0
+	if f(a)*f(b) <0:
+		b = x
+	else:
+		a = x
+	dx = abs(b-a)
+	
+print("nghiệm gần đúng của phương trình f(x) = 0","là",x)
