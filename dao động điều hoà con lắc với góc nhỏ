@@ -1,0 +1,29 @@
+#khai báo các thư viện
+import numpy as np
+import matplotlib.pyplot as plt
+from scipy.integrate import odeint # giải phương trình vi phân
+#khai báo các tham số
+g = 9.81 #m/s2
+L = 1  #m
+anpha0 = np.radians(5) #góc ban đầu
+omega0 = 0.0 # vận tốc góc ban đầu
+#phương trình vi phân
+def pendulum(state, t): #pendulum ptvp mô tả chuyển động
+	anpha, omega = state
+	danpha_dt = omega    #danpha/dt
+	domega_dt = -(g/L)*anpha
+	return[ danpha_dt, domega_dt ]
+#khoảng thời gian cần quan sát
+t = np.linspace( 0, 10, 500) # từ 0 đến 10s 
+#Giải ptvp
+sol = odeint(pendulum, [anpha0, omega0], t)
+#kết quả
+anpha = sol[:,0]# lấy kết quả cột đầu tiên khi giải sol
+#Vẽ đồ thị
+plt.plot(t,anpha, label = "anpha", color = "blue")
+plt.xlabel("thời gian (s)")
+plt.ylabel("góc lệch (radian)")
+plt.title("Dao động điều hoà của con lắc với góc nhỏ")
+plt.legend()
+plt.grid(True)
+plt.show()
