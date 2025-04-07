@@ -1,0 +1,13 @@
+number = 23
+running = True
+
+while running:
+	guess = int(input('Nhập vào một số nguyên: '))
+	if guess == number :
+		print('chính xác ')
+		running = False
+	elif guess < number:
+		print('Số đã nhập nhỏ hơn số đã chọn.')
+	else:
+		print('Số đã nhập lớn hơn số đã chọn')
+print('hoàn thành')
