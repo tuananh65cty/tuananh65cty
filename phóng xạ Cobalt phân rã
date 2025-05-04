@@ -1,0 +1,24 @@
+import numpy as np
+import matplotlib.pyplot as plt
+
+# Thông số ban đầu
+initial_mass = 500  # gram
+half_life = 5.33    # năm
+
+# Hàm tính khối lượng còn lại theo thời gian
+def remaining_mass(t, m0, half_life):
+    return m0 * (0.5) ** (t / half_life)
+
+# Tạo mảng thời gian (0 đến 30 năm, chia thành 300 điểm)
+time = np.linspace(0, 30, 300)
+mass = remaining_mass(time, initial_mass, half_life)
+
+# Vẽ đồ thị
+plt.figure(figsize=(10, 6))
+plt.plot(time, mass, label='Khối lượng còn lại (gram)', color='blue')
+plt.xlabel('Thời gian (năm)')
+plt.ylabel('Khối lượng (gram)')
+plt.title('Đồ thị phân rã phóng xạ của Cobalt (500g, chu kỳ bán rã 5,33 năm)')
+plt.grid(True)
+plt.legend()
+plt.show()
