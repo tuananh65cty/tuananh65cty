@@ -1,0 +1,81 @@
+import numpy as np
+import math
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+# Khai báo các tham số
+g = 9.81  # [m/s^2]
+rho = 7870  # khối lượng riêng của vật (sắt)
+r = 2.0e-3
+rho0 = 1250  # khối lượng riêng chất lỏng
+mu = 750e-3  # độ nhớt của chất lỏng [Pa.s]
+
+# các công thức
+s = math.pi * r**2
+v = 4 / 3 * math.pi * r**3
+m = rho * v
+k1 = 6 * math.pi * mu * r  # định luật Stokes
+k2 = 0.5 * 0.4 * s * rho0  # công thức tính k2 cho vật hình cầu
+m = rho * v
+F_Archimedes = rho0 * g * v
+
+# Hệ phương trình
+def model(y, t):
+    global g, r, mu, rho, rho0
+    v = 4 / 3 * math.pi * r**3
+    m = rho * v
+    k1 = 6 * math.pi * mu * r
+    F_Archimedes = rho0 * g * v
+    F = m * g - F_Archimedes - k1 * y[1] + k2 * y[1]**2
+    dy0_dt = y[1]            # dy0/dt
+    dy1_dt = F / m           # dy1/dt
+    return [dy0_dt, dy1_dt]
+
+import numpy as np
+import math
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+# Khai báo các tham số cố định
+g = 9.81  # [m/s^2]
+rho = 7870  # khối lượng riêng của vật (sắt)
+rho0 = 1250  # khối lượng riêng chất lỏng
+mu = 750e-3  # độ nhớt chất lỏng [Pa.s]
+
+# Danh sách các giá trị bán kính r
+r_array = np.linspace(0.001, 0.003, 10)
+t = np.linspace(0, 0.1, 200)
+
+# Hệ phương trình vi phân
+def model(y, t):
+    v = 4 / 3 * math.pi * r**3
+    m = rho * v
+    s = math.pi * r**2
+    k1 = 6 * math.pi * mu * r
+    k2 = 0.5 * 0.4 * s * rho0
+    F_Archimedes = rho0 * g * v
+    F = m * g - F_Archimedes - k1 * y[1] + k2 * y[1]**2
+    dy0_dt = y[1]
+    dy1_dt = F / m
+    return [dy0_dt, dy1_dt]
+
+# Tạo figure bằng Matplotlib
+plt.figure(figsize=(8, 5))
+
+# Lặp qua từng giá trị r để tính toán và vẽ đồ thị
+for r in r_array:
+    solve = odeint(model, [0, 0], t)
+    y0, y1 = solve.T  # Lấy tọa độ và vận tốc từ kết quả
+
+    # Vẽ đồ thị
+    plt.plot(t, y1, label=f"r = {round(r * 1e3, 2)} mm", linewidth=1.5)
+
+# Cấu hình đồ thị
+plt.title("Vận tốc của vật theo thời gian")
+plt.xlabel("t [s]")
+plt.ylabel("v [m/s]")
+plt.legend()
+plt.grid(True)
+
+# Hiển thị đồ thị
+plt.show()
