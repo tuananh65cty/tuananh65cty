@@ -1,0 +1,53 @@
+import numpy as np
+import math
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+# Khai báo các tham số
+g = 9.81  # [m/s^2]
+rho = 7870  # khối lượng riêng của vật (sắt) [kg/m^3]
+r = 2.0e-3  # bán kính vật [m]
+rho0 = 1250  # khối lượng riêng chất lỏng [kg/m^3]
+mu = 750e-3  # độ nhớt của chất lỏng [Pa.s]
+
+# Tính toán các đại lượng cơ bản
+S = math.pi * r**2  # diện tích tiết diện [m^2]
+V = 4/3 * math.pi * r**3  # thể tích vật [m^3]
+m = rho * V  # khối lượng vật [kg]
+k1 = 6 * math.pi * mu * r  # hệ số lực nhớt (định luật Stokes)
+k2 = 0.5 * 0.4 * rho0 * S  # hệ số lực cản (cho vật hình cầu)
+F_Archimedes = rho0 * g * V  # lực đẩy Archimedes [N]
+
+# Hệ phương trình vi phân mô tả chuyển động
+def model(y, t):
+    """
+    Hệ phương trình vi phân mô tả chuyển động của vật trong chất lỏng
+    y[0]: vị trí (m)
+    y[1]: vận tốc (m/s)
+    t: thời gian (s)
+    """
+    # Lực tác dụng: trọng lực - lực đẩy Archimedes - lực nhớt - lực cản
+    F = m * g - F_Archimedes - k1 * y[1] - k2 * y[1]**2
+    
+    # Đạo hàm của y[0] và y[1]
+    dy0_dt = y[1]  # vận tốc
+    dy1_dt = F / m  # gia tốc
+    
+    return [dy0_dt, dy1_dt]
+
+# Giải hệ phương trình
+y0_initial = [0, 0]  # điều kiện ban đầu [vị trí, vận tốc]
+t = np.linspace(0, 0.1, 200)  # khoảng thời gian từ 0 đến 0.1s với 200 điểm
+solution = odeint(model, y0_initial, t)
+
+# Tách kết quả thành vị trí và vận tốc
+position, velocity = solution.T
+# (Optional) Vẽ thêm đồ thị vận tốc nếu cần
+plt.figure(figsize=(8, 5))
+plt.plot(t, velocity, label="Vận tốc", color="blue", linewidth=1.5)
+plt.title("Vận tốc theo thời gian")
+plt.xlabel("Thời gian t [s]")
+plt.ylabel("Vận tốc v [m/s]")
+plt.legend()
+plt.grid(True)
+plt.show()
