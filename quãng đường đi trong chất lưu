@@ -1,0 +1,50 @@
+import numpy as np
+import math
+from scipy.integrate import odeint
+import matplotlib.pyplot as plt
+
+# Khai báo các tham số
+g = 9.81  # [m/s^2]
+rho = 7870  # khối lượng riêng của vật (sắt)
+r = 2.0e-3
+rho0 = 1250  # khối lượng riêng chất lỏng
+mu = 750e-3  # độ nhớt của chất lỏng [Pa.s]
+
+# các công thức
+s = math.pi * r**2
+v = 4 / 3 * math.pi * r**3
+m = rho * v
+k1 = 6 * math.pi * mu * r  # định luật Stokes
+k2 = 0.5 * 0.4 * s * rho0  # công thức tính k2 cho vật hình cầu
+m = rho * v
+F_Archimedes = rho0 * g * v
+
+# Hệ phương trình
+def model(y, t):
+    global g, r, mu, rho, rho0
+    v = 4 / 3 * math.pi * r**3
+    m = rho * v
+    k1 = 6 * math.pi * mu * r
+    F_Archimedes = rho0 * g * v
+    F = m * g - F_Archimedes - k1 * y[1] + k2 * y[1]**2
+    dy0_dt = y[1]            # dy0/dt
+    dy1_dt = F / m           # dy1/dt
+    return [dy0_dt, dy1_dt]
+
+# Tiến hành giải
+y00 = [0, 0]
+t = np.linspace(0, 0.1, 200)
+solve = odeint(model, y00, t)
+y0, y1 = solve.T
+
+# Vẽ đồ thị
+plt.figure(figsize=(8, 5))
+plt.plot(t, y0, label="Tọa độ", color="red", linewidth=1.5)
+
+# Định dạng đồ thị
+plt.title("Quãng đường đi được theo thời gian")
+plt.xlabel("t [s]")
+plt.ylabel("y [m]")
+plt.legend()
+plt.grid(True)
+plt.show()
