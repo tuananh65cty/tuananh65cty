@@ -6,7 +6,7 @@ from scipy.integrate import odeint # giải phương trình vi phân
 g = 9.81 #m/s2
 L = 1  #m
 k = 0.1 # hệ số lực cản lấy gần đúng 0.1 cho không khí đối với quả cầu tròn
-anpha0 = np.radians(5) #góc ban đầu
+anpha0 = np.radians(30) #góc ban đầu
 omega0 = 0.0 # vận tốc góc ban đầu
 m = 1 #kg
 #phương trình vi phân
