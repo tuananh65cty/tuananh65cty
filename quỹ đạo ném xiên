@@ -1,0 +1,30 @@
+import numpy as np
+import matplotlib.pyplot as plt
+import math
+
+# Thông số đầu vào
+v0 = 20         # Vận tốc ban đầu (m/s)
+góc = 30        # Góc ném (độ)
+h0 = 2          # Độ cao ban đầu (m)
+g = 9.81        # Gia tốc trọng trường
+
+# Tính toán cơ bản
+theta = math.radians(góc)
+v0x = v0 * math.cos(theta)
+v0y = v0 * math.sin(theta)
+
+# Thời gian bay
+t_total = (v0y + math.sqrt(v0y**2 + 2*g*h0)) / g
+
+# Tạo dữ liệu
+t = np.linspace(0, t_total, 50)
+x = v0x * t
+y = h0 + v0y * t - 0.5 * g * t**2
+
+# Vẽ đồ thị
+plt.plot(x, y, 'r-')
+plt.xlabel('Khoảng cách (m)')
+plt.ylabel('Độ cao (m)')
+plt.title('Quỹ đạo vật ném xiên')
+plt.grid(True)
+plt.show()
